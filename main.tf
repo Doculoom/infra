@@ -3,8 +3,13 @@ provider "google" {
   region  = var.region
 }
 
+provider "google-beta" {
+  project = var.project_id
+  region  = var.region
+}
+
 module "vault" {
-  source = "./modules/vault"
+  source     = "./modules/vault"
   project_id = var.project_id
   region     = var.region
 }
