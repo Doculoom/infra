@@ -23,12 +23,18 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Initialize Terraform
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform init
 
       - name: Validate Terraform
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform validate
 
       - name: Plan Terraform
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform plan -out=tfplan
 
       - name: Apply Terraform (Manual Approval)
