@@ -38,6 +38,14 @@ resource "google_cloud_run_service" "vault_service" {
   }
 }
 
+resource "google_cloud_run_service_iam_member" "public_invoker" {
+  project  = google_cloud_run_service.vault_service.project
+  location = google_cloud_run_service.vault_service.location
+  service  = google_cloud_run_service.vault_service.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
 resource "google_vertex_ai_index" "vector_index" {
   provider     = google-beta
   project      = var.project_id
