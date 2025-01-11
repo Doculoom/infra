@@ -27,7 +27,7 @@ resource "google_cloud_run_service" "vault_service" {
   template {
     spec {
       containers {
-        image = "gcr.io/${var.project_id}/vault-service:latest"
+        image = "us-central1-docker.pkg.dev/doculoom-446020/vault-service/vault-service:latest"
       }
     }
   }
