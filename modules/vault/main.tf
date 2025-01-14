@@ -30,7 +30,7 @@ resource "google_cloud_run_service" "vault_service" {
         image = "us-central1-docker.pkg.dev/doculoom-446020/vault-service/vault-service:latest"
         resources {
           limits = {
-            memory = "512Mi"
+            memory = "1Gi"
           }
         }
       }
