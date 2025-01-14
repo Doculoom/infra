@@ -69,7 +69,15 @@ resource "google_firestore_index" "memories_vector_index" {
       flat {}
     }
   }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [
+      fields
+    ]
+  }
 }
+
 
 
 
