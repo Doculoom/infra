@@ -20,14 +20,18 @@ resource "google_storage_bucket" "vector_index_bucket" {
   storage_class = "STANDARD"
 }
 
-resource "google_cloud_run_service" "vault_service" {
+resource "google_cloud_run_v2_service" "vault_service" {
   name     = "vault-service"
   location = var.region
 
   template {
-    spec {
-      containers {
-        image = "us-central1-docker.pkg.dev/doculoom-446020/vault-service/vault-service:latest"
+    containers {
+      image = "us-central1-docker.pkg.dev/doculoom-446020/vault-service/vault-service:latest"
+
+      resources {
+        limits = {
+          memory = "2Gi"
+        }
       }
     }
   }
@@ -37,6 +41,7 @@ resource "google_cloud_run_service" "vault_service" {
     latest_revision = true
   }
 }
+
 
 resource "google_cloud_run_service_iam_member" "public_invoker" {
   project  = google_cloud_run_service.vault_service.project
