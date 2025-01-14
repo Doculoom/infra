@@ -12,4 +12,5 @@ module "vault" {
   source     = "./modules/vault"
   project_id = var.project_id
   region     = var.region
+  gemini_key = var.gemini_key
 }

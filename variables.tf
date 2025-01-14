@@ -9,3 +9,8 @@ variable "region" {
   type        = string
   default     = "us-central1"
 }
+
+variable "gemini_key" {
+  description = "Gemini Key"
+  type        = string
+}
