@@ -52,4 +52,24 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
   member   = "allUsers"
 }
 
+resource "google_firestore_index" "memories_vector_index" {
+  project    = "doculoom-446020"
+  database   = "vault"
+  collection = "memories"
+
+  fields {
+    field_path = "user_id"
+    order      = "ASCENDING"
+  }
+
+  fields {
+    field_path = "embedding"
+    vector_config {
+      dimension = 768
+      flat {}
+    }
+  }
+}
+
+
 
