@@ -10,6 +10,9 @@ jobs:
     name: "Vault Infra"
     runs-on: ubuntu-latest
 
+    env:
+      TF_VAR_gemini_key: ${{ secrets.GEMINI_API_KEY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

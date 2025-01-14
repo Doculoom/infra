@@ -7,3 +7,8 @@ variable "region" {
   description = "GCP Region"
   type        = string
 }
+
+variable "gemini_key" {
+  description = "Gemini Key"
+  type        = string
+}
