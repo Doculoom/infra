@@ -20,17 +20,18 @@ resource "google_storage_bucket" "vector_index_bucket" {
   storage_class = "STANDARD"
 }
 
-resource "google_cloud_run_v2_service" "vault_service" {
+resource "google_cloud_run_service" "vault_service" {
   name     = "vault-service"
   location = var.region
 
   template {
-    containers {
-      image = "us-central1-docker.pkg.dev/doculoom-446020/vault-service/vault-service:latest"
-
-      resources {
-        limits = {
-          memory = "2Gi"
+    spec {
+      containers {
+        image = "us-central1-docker.pkg.dev/doculoom-446020/vault-service/vault-service:latest"
+        resources {
+          limits = {
+            memory = "2Gi"
+          }
         }
       }
     }
@@ -51,38 +52,4 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
   member   = "allUsers"
 }
 
-resource "google_vertex_ai_index" "vector_index" {
-  provider     = google-beta
-  project      = var.project_id
-  region       = var.region
-  display_name = "vector-search-index"
-  description  = "Vector search index for similarity search"
 
-  metadata {
-    contents_delta_uri = "gs://${google_storage_bucket.vector_index_bucket.name}/contents"
-    config {
-      dimensions = 768
-      approximate_neighbors_count = 150
-      shard_size = "SHARD_SIZE_SMALL"
-      distance_measure_type = "DOT_PRODUCT_DISTANCE"
-      algorithm_config {
-        tree_ah_config {
-          leaf_node_embedding_count = 500
-          leaf_nodes_to_search_percent = 7
-        }
-      }
-    }
-  }
-}
-
-resource "google_vertex_ai_index_endpoint" "vector_endpoint" {
-  provider     = google-beta
-  display_name = "vector-search-endpoint"
-  description  = "Vector search endpoint"
-  region       = var.region
-
-  private_service_connect_config {
-    enable_private_service_connect = true
-    project_allowlist = [var.project_id]
-  }
-}
