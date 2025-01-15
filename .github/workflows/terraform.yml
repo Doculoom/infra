@@ -7,11 +7,12 @@ on:
 
 jobs:
   terraform:
-    name: "Vault Infra"
+    name: "Infra"
     runs-on: ubuntu-latest
 
     env:
       TF_VAR_gemini_key: ${{ secrets.GEMINI_API_KEY }}
+      TF_VAR_telegram_key: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
     steps:
       - name: Checkout code

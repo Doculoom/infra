@@ -1,13 +1,11 @@
 variable "project_id" {
   description = "GCP Project ID"
   type        = string
-  default     = "doculoom-446020"
 }
 
 variable "region" {
   description = "GCP Region"
   type        = string
-  default     = "us-central1"
 }
 
 variable "gemini_key" {
@@ -16,6 +14,6 @@ variable "gemini_key" {
 }
 
 variable "telegram_key" {
-  description = "Telegram mydawg_bot Key"
+  description = "Telegram mydawg_bot key"
   type        = string
 }
