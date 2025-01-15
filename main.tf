@@ -14,3 +14,11 @@ module "vault" {
   region     = var.region
   gemini_key = var.gemini_key
 }
+
+module "her" {
+  source     = "./modules/her"
+  project_id = var.project_id
+  region     = var.region
+  gemini_key = var.gemini_key
+  telegram_key = var.telegram_key
+}
