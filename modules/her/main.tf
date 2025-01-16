@@ -23,7 +23,7 @@ resource "google_cloud_run_service" "her_service" {
         }
         resources {
           limits = {
-            memory = "1Gi"
+            memory = "500Mi"
           }
         }
       }
