@@ -54,3 +54,10 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
+
+
+resource "google_project_iam_member" "cloudtasks_admin" {
+  project = var.project_id
+  role    = "roles/cloudtasks.admin"
+  member  = "serviceAccount:${var.service_account_email}"
+}

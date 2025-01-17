@@ -22,4 +22,5 @@ module "her" {
   gemini_key = var.gemini_key
   telegram_key = var.telegram_key
   vault_api_url = var.vault_api_url
+  service_account_email = var.service_account_email
 }
