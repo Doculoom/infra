@@ -22,3 +22,8 @@ variable "vault_api_url" {
   description = "Vault API Url"
   type        = string
 }
+
+variable "service_account_email" {
+  description = "Service account email"
+  type        = string
+}
