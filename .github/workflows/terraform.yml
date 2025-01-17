@@ -37,7 +37,7 @@ jobs:
       - name: Plan Terraform
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -lock=false -out=tfplan
 
       - name: Apply Terraform (Manual Approval)
         if: github.event_name == 'push'
