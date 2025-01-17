@@ -21,6 +21,10 @@ resource "google_cloud_run_service" "her_service" {
           name  = "TELEGRAM_BOT_TOKEN"
           value = var.telegram_key
         }
+        env {
+          name  = "VAULT_API_URL"
+          value = var.vault_api_url
+        }
         resources {
           limits = {
             memory = "500Mi"
@@ -34,6 +38,12 @@ resource "google_cloud_run_service" "her_service" {
     percent         = 100
     latest_revision = true
   }
+}
+
+resource "google_cloud_tasks_queue" "her_queue" {
+  name     = "her-queue"
+  location = var.region
+  project  = var.project_id
 }
 
 
