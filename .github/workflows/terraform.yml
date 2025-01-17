@@ -15,6 +15,7 @@ jobs:
       TF_VAR_telegram_key: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TF_VAR_vault_api_url: ${{ secrets.VAULT_API_URL }}
       TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+      TF_VAR_region: ${{ secrets.GCP_REGION }}
 
     steps:
       - name: Checkout code
