@@ -36,6 +36,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform validate
 
+      # @todo: add locks
       - name: Plan Terraform
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
@@ -43,6 +44,6 @@ jobs:
 
       - name: Apply Terraform (Manual Approval)
         if: github.event_name == 'push'
-        run: terraform apply tfplan
+        run: terraform apply -lock=false tfplan
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
