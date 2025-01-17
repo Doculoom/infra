@@ -40,12 +40,6 @@ resource "google_cloud_run_service" "her_service" {
   }
 }
 
-resource "google_cloud_tasks_queue" "her_queue" {
-  name     = "her-queue"
-  location = var.region
-  project  = var.project_id
-}
-
 
 resource "google_cloud_run_service_iam_member" "public_invoker" {
   project  = google_cloud_run_service.her_service.project
@@ -60,4 +54,10 @@ resource "google_project_iam_member" "cloudtasks_admin" {
   project = var.project_id
   role    = "roles/cloudtasks.admin"
   member  = "serviceAccount:${var.service_account_email}"
+}
+
+resource "google_cloud_tasks_queue" "her_queue" {
+  name     = "her-queue"
+  location = var.region
+  project  = var.project_id
 }
