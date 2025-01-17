@@ -25,6 +25,10 @@ resource "google_cloud_run_service" "her_service" {
           name  = "VAULT_API_URL"
           value = var.vault_api_url
         }
+        env {
+          name  = "HER_API_URL"
+          value = var.her_api_url
+        }
         resources {
           limits = {
             memory = "500Mi"

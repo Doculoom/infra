@@ -23,4 +23,5 @@ module "her" {
   telegram_key = var.telegram_key
   vault_api_url = var.vault_api_url
   service_account_email = var.service_account_email
+  her_api_url = var.her_api_url
 }
