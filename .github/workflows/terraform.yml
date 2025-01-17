@@ -13,6 +13,7 @@ jobs:
     env:
       TF_VAR_gemini_key: ${{ secrets.GEMINI_API_KEY }}
       TF_VAR_telegram_key: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TF_VAR_vault_api_url: ${{ secrets.VAULT_API_URL }}
 
     steps:
       - name: Checkout code

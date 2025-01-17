@@ -21,4 +21,5 @@ module "her" {
   region     = var.region
   gemini_key = var.gemini_key
   telegram_key = var.telegram_key
+  vault_api_url = var.vault_api_url
 }

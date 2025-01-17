@@ -14,6 +14,11 @@ variable "gemini_key" {
 }
 
 variable "telegram_key" {
-  description = "Telegram mydawg_bot key"
+  description = "Telegram API Key"
+  type        = string
+}
+
+variable "vault_api_url" {
+  description = "Vault API Url"
   type        = string
 }
