@@ -56,8 +56,19 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
   member   = "allUsers"
 }
 
+resource "google_firestore_index" "timestamp_index" {
+  project     = var.project_id
+  collection  = "chat_history"
+  query_scope = "COLLECTION"
+
+  fields {
+    field_path = "timestamp"
+    order      = "ASCENDING"
+  }
+}
+
 resource "google_firestore_index" "memories_vector_index" {
-  project    = "doculoom-446020"
+  project    = var.project_id
   database   = "vault"
   collection = "memories"
 
