@@ -33,6 +33,10 @@ resource "google_cloud_run_service" "her_service" {
           name = "MEMORY_DUMP_SECONDS"
           value = 300
         }
+        env {
+          name = "GOOGLE_API_KEY"
+          value = var.google_api_key
+        }
         resources {
           limits = {
             memory = "500Mi"
