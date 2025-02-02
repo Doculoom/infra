@@ -56,15 +56,17 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
   member   = "allUsers"
 }
 
-resource "google_firestore_index" "timestamp_index" {
-  project     = var.project_id
+resource "google_firestore_field" "timestamp_index" {
+  project    = var.project_id
   database   = "vault"
-  collection  = "chat_history"
-  query_scope = "COLLECTION"
+  collection = "chat_history"
+  field      = "timestamp"
 
-  fields {
-    field_path = "timestamp"
-    order      = "ASCENDING"
+  index_config {
+    indexes {
+      order       = "ASCENDING"
+      query_scope = "COLLECTION"
+    }
   }
 }
 
