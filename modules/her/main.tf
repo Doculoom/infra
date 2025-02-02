@@ -29,6 +29,10 @@ resource "google_cloud_run_service" "her_service" {
           name  = "HER_API_URL"
           value = var.her_api_url
         }
+        env {
+          name = "MEMORY_DUMP_SECONDS"
+          value = 300
+        }
         resources {
           limits = {
             memory = "500Mi"
@@ -65,3 +69,4 @@ resource "google_cloud_tasks_queue" "her_queue" {
   location = var.region
   project  = var.project_id
 }
+
