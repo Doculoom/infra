@@ -28,8 +28,12 @@ variable "her_api_url" {
   type        = string
 }
 
-
 variable "service_account_email" {
   description = "Service account email"
+  type        = string
+}
+
+variable "google_api_key" {
+  description = "Google API Key"
   type        = string
 }
