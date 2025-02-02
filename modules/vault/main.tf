@@ -58,6 +58,7 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
 
 resource "google_firestore_index" "timestamp_index" {
   project     = var.project_id
+  database   = "vault"
   collection  = "chat_history"
   query_scope = "COLLECTION"
 
