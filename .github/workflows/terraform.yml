@@ -19,6 +19,7 @@ jobs:
       TF_VAR_region: ${{ secrets.GCP_REGION }}
       TF_VAR_service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
       TF_VAR_google_api_key: ${{ secrets.GOOGLE_API_KEY }}
+      TF_VAR_memory_dump_seconds: ${{ secrets.MEMORY_DUMP_SECONDS }}
 
     steps:
       - name: Checkout code

@@ -38,3 +38,8 @@ variable "google_api_key" {
   type        = string
 }
 
+variable "memory_dump_seconds" {
+  description = "Memory Dump Seconds"
+  type        = string
+}
+

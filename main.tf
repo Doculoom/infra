@@ -25,4 +25,5 @@ module "her" {
   service_account_email = var.service_account_email
   her_api_url = var.her_api_url
   google_api_key = var.google_api_key
+  memory_dump_seconds = var.memory_dump_seconds
 }
