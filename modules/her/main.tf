@@ -31,7 +31,7 @@ resource "google_cloud_run_service" "her_service" {
         }
         env {
           name = "MEMORY_DUMP_SECONDS"
-          value = 300
+          value = var.memory_dump_seconds
         }
         env {
           name = "GOOGLE_API_KEY"
