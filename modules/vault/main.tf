@@ -77,10 +77,7 @@ resource "google_firestore_index" "memories_vector_index" {
   database   = "vault"
   collection = "memories"
 
-  fields {
-    field_path = "user_id"
-    order      = "ASCENDING"
-  }
+  query_scope = "COLLECTION"
 
   fields {
     field_path = "embedding"
@@ -90,10 +87,16 @@ resource "google_firestore_index" "memories_vector_index" {
     }
   }
 
+  fields {
+    field_path = "user_id"
+    order      = "ASCENDING"
+  }
+
   lifecycle {
     prevent_destroy = true
     ignore_changes = [
-      fields
+      fields,
+      query_scope,
     ]
   }
 }
