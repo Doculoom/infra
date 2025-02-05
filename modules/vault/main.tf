@@ -57,15 +57,16 @@ resource "google_cloud_run_service_iam_member" "public_invoker" {
 }
 
 resource "google_firestore_index" "timestamp_index" {
-  project    = var.project_id
-  database   = "vault"
-  collection = "messages"
+  project     = var.project_id
+  database    = "vault"
+  collection  = "messages"
   query_scope = "COLLECTION"
 
   fields {
     field_path = "flushed"
     order      = "ASCENDING"
   }
+
   fields {
     field_path = "timestamp"
     order      = "ASCENDING"
@@ -73,10 +74,9 @@ resource "google_firestore_index" "timestamp_index" {
 }
 
 resource "google_firestore_index" "memories_vector_index" {
-  project    = var.project_id
-  database   = "vault"
-  collection = "memories"
-
+  project     = var.project_id
+  database    = "vault"
+  collection  = "memories"
   query_scope = "COLLECTION"
 
   fields {
@@ -86,20 +86,8 @@ resource "google_firestore_index" "memories_vector_index" {
       flat {}
     }
   }
-
-  fields {
-    field_path = "user_id"
-    order      = "ASCENDING"
-  }
-
-  lifecycle {
-    prevent_destroy = true
-    ignore_changes = [
-      fields,
-      query_scope,
-    ]
-  }
 }
+
 
 
 
