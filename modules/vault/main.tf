@@ -80,6 +80,11 @@ resource "google_firestore_index" "memories_vector_index" {
   query_scope = "COLLECTION"
 
   fields {
+    field_path = "user_id"
+    order      = "ASCENDING"
+  }
+
+  fields {
     field_path = "embedding"
     vector_config {
       dimension = 768
