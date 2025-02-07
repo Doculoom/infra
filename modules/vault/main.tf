@@ -73,7 +73,7 @@ resource "google_firestore_index" "timestamp_index" {
   }
 }
 
-resource "google_firestore_index" "memories_vector_index" {
+resource "google_firestore_index" "memories_composite_index" {
   project     = var.project_id
   database    = "vault"
   collection  = "memories"
@@ -92,6 +92,23 @@ resource "google_firestore_index" "memories_vector_index" {
     }
   }
 }
+
+resource "google_firestore_index" "memories_vector_index" {
+  project     = var.project_id
+  database    = "vault"
+  collection  = "memories"
+  query_scope = "COLLECTION"
+
+  fields {
+    field_path = "embedding"
+    vector_config {
+      dimension = 768
+      flat {}
+    }
+  }
+}
+
+
 
 
 
