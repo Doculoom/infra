@@ -12,14 +12,8 @@ jobs:
 
     env:
       TF_VAR_gemini_key: ${{ secrets.GEMINI_API_KEY }}
-      TF_VAR_telegram_key: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TF_VAR_vault_api_url: ${{ secrets.VAULT_API_URL }}
-      TF_VAR_her_api_url: ${{ secrets.HER_API_URL }}
       TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
       TF_VAR_region: ${{ secrets.GCP_REGION }}
-      TF_VAR_service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
-      TF_VAR_google_api_key: ${{ secrets.GOOGLE_API_KEY }}
-      TF_VAR_memory_dump_seconds: ${{ secrets.MEMORY_DUMP_SECONDS }}
 
     steps:
       - name: Checkout code
@@ -40,14 +34,18 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform validate
 
-      # @todo: add locks
+      - name: Refresh Terraform State
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: terraform refresh -auto-approve
+
       - name: Plan Terraform
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-        run: terraform plan -lock=false -out=tfplan
+        run: terraform plan -out=tfplan
 
       - name: Apply Terraform (Manual Approval)
         if: github.event_name == 'push'
-        run: terraform apply -lock=false tfplan
+        run: terraform apply -auto-approve tfplan
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
