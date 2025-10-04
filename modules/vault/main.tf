@@ -71,6 +71,10 @@ resource "google_firestore_index" "timestamp_index" {
     field_path = "timestamp"
     order      = "ASCENDING"
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_firestore_index" "memories_composite_index" {
@@ -90,6 +94,10 @@ resource "google_firestore_index" "memories_composite_index" {
       dimension = 768
       flat {}
     }
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 

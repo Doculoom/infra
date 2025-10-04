@@ -37,6 +37,10 @@ resource "google_cloud_run_service" "her_service" {
           name = "GOOGLE_API_KEY"
           value = var.google_api_key
         }
+        env {
+          name  = "CLOUD_TASKS_QUEUE"
+          value = google_cloud_tasks_queue.her_queue.name
+        }
         resources {
           limits = {
             memory = "500Mi"

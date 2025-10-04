@@ -49,6 +49,47 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform apply -refresh-only -auto-approve
 
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GOOGLE_CREDENTIALS }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Handle Firestore Index Conflicts
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: |
+          # Import existing indexes if they exist in GCP but not in state
+          # This prevents "index already exists" errors
+          
+          PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          DATABASE="vault"
+          
+          # Get timestamp index ID
+          TIMESTAMP_INDEX=$(gcloud firestore indexes composite list \
+            --database="$DATABASE" \
+            --filter="collectionGroup:messages" \
+            --format="value(name)" \
+            --project="$PROJECT_ID" 2>/dev/null | grep "messages" | head -n1 || echo "")
+          
+          # Get memories index ID
+          MEMORIES_INDEX=$(gcloud firestore indexes composite list \
+            --database="$DATABASE" \
+            --filter="collectionGroup:memories" \
+            --format="value(name)" \
+            --project="$PROJECT_ID" 2>/dev/null | grep "memories" | head -n1 || echo "")
+          
+          # Import if exists
+          if [ -n "$TIMESTAMP_INDEX" ]; then
+            echo "Importing timestamp_index: $TIMESTAMP_INDEX"
+            terraform import module.vault.google_firestore_index.timestamp_index "$TIMESTAMP_INDEX" 2>/dev/null || true
+          fi
+          
+          if [ -n "$MEMORIES_INDEX" ]; then
+            echo "Importing memories_composite_index: $MEMORIES_INDEX"
+            terraform import module.vault.google_firestore_index.memories_composite_index "$MEMORIES_INDEX" 2>/dev/null || true
+          fi
+
       - name: Plan Terraform
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
