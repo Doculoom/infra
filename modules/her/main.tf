@@ -69,7 +69,7 @@ resource "google_project_iam_member" "cloudtasks_admin" {
 }
 
 resource "google_cloud_tasks_queue" "her_queue" {
-  name     = "her-queue"
+  name     = "her-queue-v2"
   location = var.region
   project  = var.project_id
 }
