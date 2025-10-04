@@ -45,6 +45,12 @@ resource "google_cloud_run_service" "vault_service" {
     percent         = 100
     latest_revision = true
   }
+
+  lifecycle {
+    ignore_changes = [
+      template[0].spec[0].containers[0].resources[0].limits["cpu"],
+    ]
+  }
 }
 
 
@@ -73,7 +79,7 @@ resource "google_firestore_index" "timestamp_index" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    ignore_changes = all
   }
 }
 
@@ -97,7 +103,7 @@ resource "google_firestore_index" "memories_composite_index" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    ignore_changes = all
   }
 }
 

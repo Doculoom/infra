@@ -54,6 +54,12 @@ resource "google_cloud_run_service" "her_service" {
     percent         = 100
     latest_revision = true
   }
+
+  lifecycle {
+    ignore_changes = [
+      template[0].spec[0].containers[0].resources[0].limits["cpu"],
+    ]
+  }
 }
 
 
