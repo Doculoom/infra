@@ -37,7 +37,7 @@ jobs:
       - name: Refresh Terraform State
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-        run: terraform refresh -auto-approve
+        run: terraform apply -refresh-only -auto-approve
 
       - name: Plan Terraform
         env:
