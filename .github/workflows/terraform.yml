@@ -44,51 +44,66 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: terraform validate
 
-      - name: Refresh Terraform State
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-        run: terraform apply -refresh-only -auto-approve
-
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
         with:
           service_account_key: ${{ secrets.GOOGLE_CREDENTIALS }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Handle Firestore Index Conflicts
+      - name: Import Existing Firestore Indexes
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: |
-          # Import existing indexes if they exist in GCP but not in state
-          # This prevents "index already exists" errors
-          
+          set -e
           PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
           DATABASE="vault"
           
-          # Get timestamp index ID
-          TIMESTAMP_INDEX=$(gcloud firestore indexes composite list \
-            --database="$DATABASE" \
-            --filter="collectionGroup:messages" \
-            --format="value(name)" \
-            --project="$PROJECT_ID" 2>/dev/null | grep "messages" | head -n1 || echo "")
+          echo "🔍 Checking Terraform state..."
+          TIMESTAMP_IN_STATE=$(terraform state list | grep "google_firestore_index.timestamp_index" || echo "")
+          MEMORIES_IN_STATE=$(terraform state list | grep "google_firestore_index.memories_composite_index" || echo "")
           
-          # Get memories index ID
-          MEMORIES_INDEX=$(gcloud firestore indexes composite list \
-            --database="$DATABASE" \
-            --filter="collectionGroup:memories" \
-            --format="value(name)" \
-            --project="$PROJECT_ID" 2>/dev/null | grep "memories" | head -n1 || echo "")
+          echo "🔍 Checking GCP for existing indexes..."
           
-          # Import if exists
-          if [ -n "$TIMESTAMP_INDEX" ]; then
-            echo "Importing timestamp_index: $TIMESTAMP_INDEX"
-            terraform import module.vault.google_firestore_index.timestamp_index "$TIMESTAMP_INDEX" 2>/dev/null || true
+          # Import timestamp index if not in state but exists in GCP
+          if [ -z "$TIMESTAMP_IN_STATE" ]; then
+            TIMESTAMP_INDEX=$(gcloud firestore indexes composite list \
+              --database="$DATABASE" \
+              --filter="collectionGroup:messages" \
+              --format="value(name)" \
+              --project="$PROJECT_ID" 2>/dev/null | head -n1 || echo "")
+            
+            if [ -n "$TIMESTAMP_INDEX" ]; then
+              echo "📥 Importing timestamp_index: $TIMESTAMP_INDEX"
+              terraform import module.vault.google_firestore_index.timestamp_index "$TIMESTAMP_INDEX" || echo "⚠️ Import failed, will create new"
+            else
+              echo "ℹ️ timestamp_index not found in GCP, will be created"
+            fi
+          else
+            echo "✅ timestamp_index already in state"
           fi
           
-          if [ -n "$MEMORIES_INDEX" ]; then
-            echo "Importing memories_composite_index: $MEMORIES_INDEX"
-            terraform import module.vault.google_firestore_index.memories_composite_index "$MEMORIES_INDEX" 2>/dev/null || true
+          # Import memories index if not in state but exists in GCP
+          if [ -z "$MEMORIES_IN_STATE" ]; then
+            MEMORIES_INDEX=$(gcloud firestore indexes composite list \
+              --database="$DATABASE" \
+              --filter="collectionGroup:memories" \
+              --format="value(name)" \
+              --project="$PROJECT_ID" 2>/dev/null | head -n1 || echo "")
+            
+            if [ -n "$MEMORIES_INDEX" ]; then
+              echo "📥 Importing memories_composite_index: $MEMORIES_INDEX"
+              terraform import module.vault.google_firestore_index.memories_composite_index "$MEMORIES_INDEX" || echo "⚠️ Import failed, will create new"
+            else
+              echo "ℹ️ memories_composite_index not found in GCP, will be created"
+            fi
+          else
+            echo "✅ memories_composite_index already in state"
           fi
+
+      - name: Refresh Terraform State
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: terraform apply -refresh-only -auto-approve
 
       - name: Plan Terraform
         env:
